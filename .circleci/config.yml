@@ -18,6 +18,7 @@ jobs:
       - image: circleci/node:latest
     steps:
       - run:
+          d
           name: Deploy
           command: ssh -i ~/.ssh/id_rsa <USER>@<IP_ADDRESS> "cd /var/www && git pull && npm install && pm2 restart all"
       - run:
