@@ -2,7 +2,7 @@
 sudo apt update && sudo apt install nodejs npm
 sudo npm install -g pm2
 pm2 stop DevOps-CA1
-cd SimpleApplication
+cd Devops-CA1/
 npm install
 
 # Restart the application using pm2
