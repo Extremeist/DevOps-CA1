@@ -1,0 +1,39 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/project
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - run:
+          name: Build
+          command: npm run build
+  deploy:
+    working_directory: ~/project
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - run:
+          name: Deploy
+          command: ssh -i ~/.ssh/id_rsa <USER>@<IP_ADDRESS> "cd /var/www && git pull && npm install && pm2 restart all"
+      - run:
+          name: Cleanup
+          command: ssh -i ~/.ssh/id_rsa <USER>@<IP_ADDRESS> "cd /var/www && npm prune --production && pm2 save && pm2 unstartup && pm2 startup"
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
